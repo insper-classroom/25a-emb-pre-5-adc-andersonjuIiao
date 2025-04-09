@@ -7,6 +7,8 @@
 #include <stdio.h>
 
 #include "data.h"
+#define WINDOW_SIZE 5
+
 QueueHandle_t xQueueData;
 
 // não mexer! Alimenta a fila com os dados do sinal
@@ -31,21 +33,20 @@ void process_task(void *p) {
 
     while (true) {
         if (xQueueReceive(xQueueData, &data, pdMS_TO_TICKS(100))) {
-            if (index < 5) {
+            if (index < WINDOW_SIZE) {
                 soma += data;
-                temp = (index == 0) ? data : temp;
+                if (index == 0) {
+                    temp = data;
+                }
             }
             else {
                 soma = soma - temp + data;
-                temp = data; 
+                temp = data;
             }
-
-            index++;
-            if (index >= 5) {
-                index = 5;
+            if (index < WINDOW_SIZE) {
+                index++;
             }
-
-            int resultado = soma / 5;
+            int resultado = soma / WINDOW_SIZE;
             printf("%d\n", resultado);
 
             vTaskDelay(pdMS_TO_TICKS(50));
