@@ -27,28 +27,27 @@ void data_task(void *p) {
 
 void process_task(void *p) {
     int data;
-    int index = 0;
-    int soma  = 0;
-    int temp  = 0;
+    int window[WINDOW_SIZE] = {0};   
+    int write_idx = 0;               
+    int sum = 0;                     
+    int count = 0;                   
 
     while (true) {
         if (xQueueReceive(xQueueData, &data, pdMS_TO_TICKS(100))) {
-            if (index < WINDOW_SIZE) {
-                soma += data;
-                if (index == 0) {
-                    temp = data;
-                }
+            sum -= window[write_idx];
+            window[write_idx] = data;
+            sum += data;
+            write_idx++;
+            if (write_idx >= WINDOW_SIZE) {
+                write_idx = 0;
             }
-            else {
-                soma = soma - temp + data;
-                temp = data;
+            if (count < WINDOW_SIZE) {
+                count++;
             }
-            if (index < WINDOW_SIZE) {
-                index++;
+            if (count >= WINDOW_SIZE) {
+                int y = sum / WINDOW_SIZE;
+                printf("%d\n", y);
             }
-            int resultado = soma / WINDOW_SIZE;
-            printf("%d\n", resultado);
-
             vTaskDelay(pdMS_TO_TICKS(50));
         }
     }
