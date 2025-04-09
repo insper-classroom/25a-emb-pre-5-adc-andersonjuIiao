@@ -50,9 +50,7 @@ void process_task(void *p) {
 
                 index = 0;
             }
-            else{
-                index ++;
-            }
+            index ++;
 
 
 
