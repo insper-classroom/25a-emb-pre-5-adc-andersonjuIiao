@@ -24,38 +24,30 @@ void data_task(void *p) {
 }
 
 void process_task(void *p) {
-    int data = 0;
+    int data;
+    int index = 0;
+    int soma  = 0;
+    int temp  = 0;
 
     while (true) {
-        int index = 0;
-        int soma = 0 ;
-        int temp = 0;
-        if (xQueueReceive(xQueueData, &data, 100)) {
-            // implementar filtro aqui!
-            if(index ==0){
-                temp = data;
-            }
-            if (index <= 4){
+        if (xQueueReceive(xQueueData, &data, pdMS_TO_TICKS(100))) {
+            if (index < 5) {
                 soma += data;
-                int resultado = soma/ 5;
-                printf("%d\n",resultado);
-
+                temp = (index == 0) ? data : temp;
             }
-            if (index ==5){
-                soma -= temp;
-                soma += data;
-                temp = data;
-                int resultado = soma/ 5;
-                printf("%d\n",resultado);
-
-                index = 0;
+            else {
+                soma = soma - temp + data;
+                temp = data; 
             }
-            index ++;
 
+            index++;
+            if (index >= 5) {
+                index = 5;
+            }
 
+            int resultado = soma / 5;
+            printf("%d\n", resultado);
 
-
-            // deixar esse delay!
             vTaskDelay(pdMS_TO_TICKS(50));
         }
     }
