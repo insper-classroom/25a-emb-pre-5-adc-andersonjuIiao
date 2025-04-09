@@ -27,10 +27,10 @@ void data_task(void *p) {
 
 void process_task(void *p) {
     int data;
-    int window[WINDOW_SIZE] = {0};   
-    int write_idx = 0;               
-    int sum = 0;                     
-    int count = 0;                   
+    int window[WINDOW_SIZE] = {0};  
+    int write_idx = 0;              
+    int sum = 0;                    
+    int count = 0;             
 
     while (true) {
         if (xQueueReceive(xQueueData, &data, pdMS_TO_TICKS(100))) {
@@ -44,10 +44,8 @@ void process_task(void *p) {
             if (count < WINDOW_SIZE) {
                 count++;
             }
-            if (count >= WINDOW_SIZE) {
-                int y = sum / WINDOW_SIZE;
-                printf("%d\n", y);
-            }
+            int y = sum / WINDOW_SIZE;
+            printf("%d\n", y);
             vTaskDelay(pdMS_TO_TICKS(50));
         }
     }
