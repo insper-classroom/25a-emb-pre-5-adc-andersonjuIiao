@@ -27,8 +27,32 @@ void process_task(void *p) {
     int data = 0;
 
     while (true) {
+        int index = 0;
+        int soma = 0 ;
+        int temp = 0;
         if (xQueueReceive(xQueueData, &data, 100)) {
             // implementar filtro aqui!
+            if(index ==0){
+                temp = data;
+            }
+            if (index <= 4){
+                soma += data;
+                int resultado = soma/ 5;
+                printf("%d\n",resultado);
+
+            }
+            if (index ==5){
+                soma -= temp;
+                soma += data;
+                temp = data;
+                int resultado = soma/ 5;
+                printf("%d\n",resultado);
+
+                index = 0;
+            }
+            else{
+                index ++;
+            }
 
 
 
